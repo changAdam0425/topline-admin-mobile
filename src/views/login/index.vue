@@ -29,15 +29,20 @@ export default {
   data () {
     return {
       user: {
-        mobile: '',
-        code: ''
+        mobile: '18401683724',
+        code: '123456'
       }
     }
   },
   methods: {
     async handleLogin () {
-      const data = await login(this.user)
-      console.log(data)
+      try {
+        const data = await login(this.user)
+        console.log(data)
+      } catch (err) {
+        console.log(err)
+        console.log('登录失败')
+      }
     }
   }
 }
