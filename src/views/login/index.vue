@@ -3,13 +3,13 @@
     <van-nav-bar title="登录" />
     <form>
       <van-cell-group>
-        <van-field v-model="users.mobile"
+        <van-field v-model="user.mobile"
                    clearable
                    label="手机号"
                    left-icon="contact"
                    placeholder="请输入手机号" />
 
-        <van-field v-model="users.code"
+        <van-field v-model="user.code"
                    label="验证码"
                    left-icon="setting-o"
                    placeholder="请输入验证码" />
@@ -23,12 +23,12 @@
   </div>
 </template>
 <script>
-import axios from 'axios'
+import { login } from '@/api/user.js'
 export default {
   name: 'LoginApp',
   data () {
     return {
-      users: {
+      user: {
         mobile: '',
         code: ''
       }
@@ -36,12 +36,8 @@ export default {
   },
   methods: {
     async handleLogin () {
-      const res = await axios({
-        method: 'POST',
-        url: 'http://toutiao.course.itcast.cn/app/v1_0/authorizations',
-        data: this.users
-      })
-      console.log(res)
+      const data = await login(this.user)
+      console.log(data)
     }
   }
 }
