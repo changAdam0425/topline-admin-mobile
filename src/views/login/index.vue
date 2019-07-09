@@ -11,17 +11,19 @@
 
         <van-field v-model="users.code"
                    label="验证码"
-                   left-icon="contact"
+                   left-icon="setting-o"
                    placeholder="请输入验证码" />
       </van-cell-group>
     </form>
     <div class="login-btn">
       <van-button class="btn"
-                  type="info">登录</van-button>
+                  type="info"
+                  @click="handleLogin">登录</van-button>
     </div>
   </div>
 </template>
 <script>
+import axios from 'axios'
 export default {
   name: 'LoginApp',
   data () {
@@ -30,6 +32,16 @@ export default {
         mobile: '',
         code: ''
       }
+    }
+  },
+  methods: {
+    async handleLogin () {
+      const res = await axios({
+        method: 'POST',
+        url: 'http://toutiao.course.itcast.cn/app/v1_0/authorizations',
+        data: this.users
+      })
+      console.log(res)
     }
   }
 }
