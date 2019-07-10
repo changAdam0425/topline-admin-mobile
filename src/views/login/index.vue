@@ -38,6 +38,8 @@ export default {
     async handleLogin () {
       try {
         const data = await login(this.user)
+        // 登陆成功，提交mutation
+        this.$store.commit('setUser', data)
         console.log(data)
       } catch (err) {
         console.log(err)
