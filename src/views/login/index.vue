@@ -25,7 +25,8 @@
     <div class="login-btn">
       <van-button class="btn"
                   type="info"
-                  @click="handleLogin">登录</van-button>
+                  @click="handleLogin"
+                  :loading="loginLoading">登录</van-button>
     </div>
   </div>
 </template>
@@ -38,7 +39,9 @@ export default {
       user: {
         mobile: '18401683724',
         code: '246810'
-      }
+      },
+      // 控制登录的loading状态
+      loginLoading: false
     }
   },
   created () {
@@ -46,19 +49,26 @@ export default {
   },
   methods: {
     async handleLogin () {
+      this.loginLoading = true
       try {
-        this.$validator.validate().then(async valid => {
-          if (!valid) {
-            return
-          }
-          const data = await login(this.user)
-          // 登陆成功，提交mutation
-          this.$store.commit('setUser', data)
-          console.log(data)
+        const valid = await this.$validator.validate()
+        if (!valid) {
+          // 表单验证失败，取消loading状态
+          this.loginLoading = false
+          return
+        }
+        // 表单验证通过
+        const data = await login(this.user)
+        // 登陆成功，提交mutation
+        this.$store.commit('setUser', data)
+        console.log(data)
+        this.$router.push({
+          name: 'Home'
         })
       } catch (err) {
         console.log(err)
-        console.log('登录失败')
+        this.$toast.fail('登录失败！')
+        this.loginLoading = false
       }
     },
 
