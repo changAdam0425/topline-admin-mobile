@@ -1,7 +1,9 @@
 <template>
   <div class="home">
-    <van-nav-bar title="首页" />
-    <van-tabs v-model="activeChannelIndex">
+    <van-nav-bar title="首页"
+                 fixed />
+    <van-tabs v-model="activeChannelIndex"
+              class="channel-tabs">
       <van-tab title="标签 1">
         <!-- 下拉刷新 -->
         <van-pull-refresh v-model="isLoading"
@@ -62,7 +64,16 @@ export default {
     }
   }
 }
-
 </script>
 <style lang="less" scoped>
+.channel-tabs {
+  margin-bottom: 100px;
+}
+.channel-tabs /deep/ .van-tabs__wrap {
+  position: fixed;
+  top: 92px;
+}
+.channel-tabs /deep/ .van-tabs__content {
+  margin-top: 100px;
+}
 </style>
