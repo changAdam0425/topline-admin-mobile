@@ -26,6 +26,7 @@
 </template>
 <script>
 import { getUserChannels } from '@/api/channel'
+
 export default {
   name: 'HomeApp',
   data () {
@@ -45,6 +46,7 @@ export default {
     this.loadChannels()
   },
   methods: {
+    // 获取频道
     async loadChannels () {
       const { user } = this.$store.state
       let channels = []
@@ -72,6 +74,7 @@ export default {
 
       this.channels = channels
     },
+    // 下拉刷新
     onRefresh () {
       setTimeout(() => {
         this.$toast('刷新成功')
@@ -79,6 +82,7 @@ export default {
         this.count++
       }, 500)
     },
+    // 上拉加载更多
     onLoad () {
       // 异步更新数据
       setTimeout(() => {
