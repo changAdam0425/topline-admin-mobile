@@ -63,6 +63,13 @@ export default {
           channels = data.channels
         }
       }
+      channels.forEach(item => {
+        item.articles = [] // 存储当前的文章列表
+        item.downPullLoading = false // 控制当前频道的下拉刷新的loading状态
+        item.ulPullLoading = false // 控制当前频道的上滑刷新的loading状态
+        item.ulPullFinished = false // 控制当前频道是否加载完毕
+      })
+
       this.channels = channels
     },
     onRefresh () {
