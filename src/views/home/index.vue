@@ -4,7 +4,9 @@
                  fixed />
     <van-tabs v-model="activeChannelIndex"
               class="channel-tabs">
-      <van-tab title="标签 1">
+      <van-tab v-for="channelItem in channels"
+               :key="channelItem.id"
+               :title="channelItem.name">
         <!-- 下拉刷新 -->
         <van-pull-refresh v-model="isLoading"
                           @refresh="onRefresh">
@@ -19,19 +21,19 @@
           </van-list>
         </van-pull-refresh>
       </van-tab>
-      <van-tab title="标签 2">内容 2</van-tab>
-      <van-tab title="标签 3">内容 3</van-tab>
-      <van-tab title="标签 4">内容 4</van-tab>
     </van-tabs>
   </div>
 </template>
 <script>
+import { getUserChannels } from '@/api/channel'
 export default {
   name: 'HomeApp',
   data () {
     return {
       // 激活状态的频道的index
       activeChannelIndex: 0,
+      // 频道列表
+      channels: [],
       count: 0,
       isLoading: false,
       list: [],
@@ -39,7 +41,30 @@ export default {
       finished: false
     }
   },
+  created () {
+    this.loadChannels()
+  },
   methods: {
+    async loadChannels () {
+      const { user } = this.$store.state
+      let channels = []
+      if (user) {
+        // 已登录
+        const data = await getUserChannels()
+        // console.log(data)
+        channels = data.channels
+      } else {
+        // 未登录
+        const localchannels = JSON.parse(window.localStorage.getItem('channels'))
+        if (localchannels) {
+          channels = localchannels
+        } else {
+          const data = await getUserChannels()
+          channels = data.channels
+        }
+      }
+      this.channels = channels
+    },
     onRefresh () {
       setTimeout(() => {
         this.$toast('刷新成功')
