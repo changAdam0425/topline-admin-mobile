@@ -10,7 +10,7 @@
         <!-- 下拉刷新 -->
         <van-pull-refresh v-model="isLoading"
                           @refresh="onRefresh">
-          <!-- 列表 -->
+          <!-- 列表  上拉刷新-->
           <van-list v-model="loading"
                     :finished="finished"
                     finished-text="没有更多了"
@@ -26,7 +26,7 @@
 </template>
 <script>
 import { getUserChannels } from '@/api/channel'
-
+import { getArticles } from '@/api/article'
 export default {
   name: 'HomeApp',
   data () {
@@ -44,6 +44,12 @@ export default {
   },
   created () {
     this.loadChannels()
+  },
+  computed: {
+    // 获取当前激活的频道
+    activeChannel () {
+      return this.channels[this.activeChannelIndex]
+    }
   },
   methods: {
     // 获取频道
@@ -82,8 +88,11 @@ export default {
         this.count++
       }, 500)
     },
-    // 上拉加载更多
-    onLoad () {
+    // 上拉加载更多  push数据
+    async onLoad () {
+      console.log('onload')
+      const data = await this.loadArticles()
+      console.log(data)
       // 异步更新数据
       setTimeout(() => {
         for (let i = 0; i < 10; i++) {
@@ -97,6 +106,16 @@ export default {
           this.finished = true
         }
       }, 500)
+    },
+    //  获取文章
+    async loadArticles () {
+      const { id: channelId } = this.activeChannel
+      const data = await getArticles({
+        channelId,
+        timestamp: Date.now(),
+        withTop: 1
+      })
+      return data
     }
   }
 }
